@@ -1,7 +1,5 @@
-import 'package:asiomonitoria/models/historic.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class HistoricList extends StatefulWidget {
   //builda a tela de histórico
@@ -10,13 +8,6 @@ class HistoricList extends StatefulWidget {
 }
 
 class _HistoricListState extends State<HistoricList> {
-  @override
-  void initState() {
-    super.initState();
-    //carregando o histórico
-    Provider.of<Historic>(context, listen: false).loadHistoric();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +18,7 @@ class _HistoricListState extends State<HistoricList> {
       ),
       //lista dinâmica que irá renderizar somente a quantidade possivel de se exibir na tela
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: 20,
         itemBuilder: (ctx, index) {
           //final his = historic[index];
           return Card(

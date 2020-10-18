@@ -22,8 +22,9 @@ class MyHomePage extends StatelessWidget {
   final passController = TextEditingController();
 
   //função para chamar a tela de histórico
-  void _selectedPage(BuildContext context) {
-    Navigator.of(context).push(
+
+  void _selectedPage(BuildContext ctx) {
+    Navigator.of(ctx).push(
       MaterialPageRoute(
         builder: (_) {
           return HistoricList();
