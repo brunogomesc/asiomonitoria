@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/historic_screen.dart';
+import './data/API.dart' as api;
 
 main() => runApp(AppAsio());
 
@@ -20,6 +21,7 @@ class AppAsio extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final userController = TextEditingController();
   final passController = TextEditingController();
+  int idCliente = 1;
 
   //função para chamar a tela de histórico
 
@@ -37,21 +39,74 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //classe que ficará a validação de autenticação
-    _autenthicateUser(String user, String pass) {
-      if (user == 'admin' && pass == '12345') {
+    _autenthicateUser(String user, String pass) async {
+      var autenticate = await api.ValidaApi().validaUser(user, pass);
+      if (autenticate) {
         print('User autenticate..........');
+        await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: Text(
+                'Usuário autenticado',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        );
+        userController.text = '';
+        passController.text = '';
+        await api.ValidaApi().retornaHistorico(idCliente);
         _selectedPage(context);
       } else if (user.isEmpty && pass.isEmpty) {
         print('Fields is empty..........');
+        await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: Text(
+                'Campos vazios',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        );
+        userController.text = '';
+        passController.text = '';
       } else {
         print('User no autenticate..........');
+        await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: Text(
+                'Usuário não autenticado',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        );
+        userController.text = '';
+        passController.text = '';
       }
     }
 
     //componente de tela que permite ter um corpo e barra de titulo
     return Scaffold(
       // cor do fundo da tela de login
-      backgroundColor: Color.fromRGBO(87, 89, 101, 100),
+      backgroundColor: Color.fromRGBO(87, 89, 101, 1.0),
       appBar: AppBar(
         title: Text('Asio Monitoramento'),
         backgroundColor: Color.fromRGBO(147, 148, 152, 100), //cor do app bar
@@ -64,11 +119,11 @@ class MyHomePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                child: Image.asset('assets/images/AsioLogo.jpg'),
+                child: Image.asset('assets/images/AsioLogo.jpeg'),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 100, 10, 50),
+              padding: const EdgeInsets.fromLTRB(10, 30, 10, 50),
               child: Card(
                 elevation: 5,
                 color: Color.fromRGBO(195, 196, 200, 100), // cor dos campos
